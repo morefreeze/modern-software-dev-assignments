@@ -8,17 +8,17 @@ load_dotenv()
 NUM_RUNS_TIMES = 5
 
 # TODO: Fill this in!
-YOUR_SYSTEM_PROMPT = """Solve this word problem carefully using step-by-step chain-of-thought reasoning.
+YOUR_SYSTEM_PROMPT = """Solve this problem carefully using step-by-step chain-of-thought reasoning.
 
-Think through each step explicitly:
-1. Start by understanding the total distance and what each stop means
-2. Write down what you know: total trip = 60 miles, first stop at 20 miles
-3. Second stop is 15 miles before the end of the trip - where is that?
-4. Calculate the distance between the two stops
-5. Double-check your arithmetic
+Calculate 3^{12345} (mod 100). Think through each step explicitly:
+1. Understand the problem - find the last two digits of 3 raised to the 12345 power
+2. Find the repeating pattern (cycle) of the last two digits when raising 3 to increasing powers
+3. Use the cycle length to reduce 12345 to a smaller equivalent exponent
+4. Calculate the result
+5. Double-check your pattern and arithmetic
 6. Put your final answer on the last line in the exact format: "Answer: <number>"
 
-Work through the problem slowly to avoid mistakes."""
+Work slowly and methodically to avoid calculation errors."""
 
 
 USER_PROMPT = """

@@ -9,7 +9,20 @@ load_dotenv()
 NUM_RUNS_TIMES = 5
 
 # TODO: Fill this in! Try to get as close to 100% correctness across all runs as possible.
-YOUR_SYSTEM_PROMPT = ""
+YOUR_SYSTEM_PROMPT = """Solve this word problem carefully using step-by-step reasoning.
+
+Self-consistency: work through the problem step-by-step, showing your reasoning clearly, then give the final answer.
+
+Think through each step:
+1. The total trip is 60 miles
+2. First stop after 20 miles
+3. Second stop is 15 miles before the end of the trip
+4. Where is the second stop located?
+5. Calculate the distance between the two stops
+6. Double-check your arithmetic
+7. Put the final answer on the last line in the format: "Answer: <number>"
+
+Take your time and think carefully to get the correct answer."""
 
 USER_PROMPT = """
 Solve this problem, then give the final answer on the last line as "Answer: <number>".
