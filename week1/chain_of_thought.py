@@ -8,7 +8,17 @@ load_dotenv()
 NUM_RUNS_TIMES = 5
 
 # TODO: Fill this in!
-YOUR_SYSTEM_PROMPT = ""
+YOUR_SYSTEM_PROMPT = """Solve this word problem carefully using step-by-step chain-of-thought reasoning.
+
+Think through each step explicitly:
+1. Start by understanding the total distance and what each stop means
+2. Write down what you know: total trip = 60 miles, first stop at 20 miles
+3. Second stop is 15 miles before the end of the trip - where is that?
+4. Calculate the distance between the two stops
+5. Double-check your arithmetic
+6. Put your final answer on the last line in the exact format: "Answer: <number>"
+
+Work through the problem slowly to avoid mistakes."""
 
 
 USER_PROMPT = """
