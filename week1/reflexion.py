@@ -15,7 +15,17 @@ Keep the implementation minimal.
 """
 
 # TODO: Fill this in!
-YOUR_REFLEXION_PROMPT = ""
+YOUR_REFLEXION_PROMPT = """You are a debugging and code improvement assistant. Given the previous incorrect implementation of a password validator and a list of failing tests, analyze what went wrong and provide the corrected implementation.
+
+Password validation rules:
+- At least 8 characters long
+- Must contain at least one uppercase letter (A-Z)
+- Must contain at least one lowercase letter (a-z)
+- Must contain at least one digit (0-9)
+- Must contain at least one special character from: !@#$%^&*()-_
+- Must NOT contain any whitespace characters
+
+Output ONLY a single fenced Python code block containing the corrected `is_valid_password(password: str) -> bool` function. No extra explanation needed."""
 
 
 # Ground-truth test suite used to evaluate generated code
@@ -96,7 +106,16 @@ def your_build_reflexion_context(prev_code: str, failures: List[str]) -> str:
 
     Return a string that will be sent as the user content alongside the reflexion system prompt.
     """
-    return ""
+    return f"""Your previous implementation:
+
+```python
+{prev_code}
+```
+
+The following tests failed:
+{chr(10).join('- ' + failure for failure in failures)}
+
+Identify the bugs in the previous implementation and provide the corrected full code."""
 
 
 def apply_reflexion(
