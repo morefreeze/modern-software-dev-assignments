@@ -7,26 +7,29 @@ load_dotenv()
 NUM_RUNS_TIMES = 5
 
 # TODO: Fill this in!
-YOUR_SYSTEM_PROMPT = """Your task: reverse the order of the letters in the given word.
+YOUR_SYSTEM_PROMPT = """Important: "httpstatus" is a single 10-letter word, NOT two words. The letters are:
 
-How to reverse: write the word backwards. Start from the last character and go to the first.
+Original order (first to last): h t t p s t a t u s
+Number of letters: 10
 
-Example 1:
-Original: h e l l o → Reverse: o l l e h → Output: olleh
+Word spelling:
+1: h
+2: t
+3: t
+4: p
+5: s
+6: t
+7: a
+8: t
+9: u
+10: s
 
-Example 2:
-Original: p y t h o n → Reverse: n o h t y p → Output: nohtyp
+Reverse means we reverse the order: the first letter becomes the last, the last becomes the first, etc.
+So reversed order is: s u t a t s p t t h
 
-Example 3:
-Original: c o d i n g → Reverse: g n i d o c → Output: gnidoc
+Output ONLY the concatenated letters: sutatsptth
 
-What you need to do:
-1. Take the input word "httpstatus"
-2. Write its letters: h t t p s t a t u s
-3. Write it backwards starting from the last character
-4. Output ONLY the reversed word, nothing else
-
-Output only the reversed word: no explanations, no extra text."""
+Just output that exact string, nothing else."""
 
 USER_PROMPT = """
 Reverse the order of letters in the following word. Only output the reversed word, no other text:
