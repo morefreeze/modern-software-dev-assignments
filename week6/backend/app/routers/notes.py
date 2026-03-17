@@ -68,28 +68,13 @@ def get_note(note_id: int, db: Session = Depends(get_db)) -> NoteRead:
 
 @router.get("/unsafe-search", response_model=list[NoteRead])
 def unsafe_search(q: str, db: Session = Depends(get_db)) -> list[NoteRead]:
-    sql = text(
-        f"""
-        SELECT id, title, content, created_at, updated_at
-        FROM notes
-        WHERE title LIKE '%{q}%' OR content LIKE '%{q}%'
-        ORDER BY created_at DESC
-        LIMIT 50
-        """
-    )
-    rows = db.execute(sql).all()
-    results: list[NoteRead] = []
-    for r in rows:
-        results.append(
-            NoteRead(
-                id=r.id,
-                title=r.title,
-                content=r.content,
-                created_at=r.created_at,
-                updated_at=r.updated_at,
-            )
-        )
-    return results
+    # Fixed: Use SQLAlchemy contains() operator instead of raw f-string SQL
+    # This prevents SQL injection because SQLAlchemy handles parameter escaping
+    stmt = select(Note)
+    stmt = stmt.where((Note.title.contains(q)) | (Note.content.contains(q)))
+    stmt = stmt.order_by(desc(Note.created_at)).limit(50)
+    rows = db.execute(stmt.offset(0)).scalars().all()
+    return [NoteRead.model_validate(row) for row in rows]
 
 
 @router.get("/debug/hash-md5")
@@ -107,9 +92,13 @@ def debug_eval(expr: str) -> dict[str, str]:
 
 @router.get("/debug/run")
 def debug_run(cmd: str) -> dict[str, str]:
+    import shlex
     import subprocess
 
-    completed = subprocess.run(cmd, shell=True, capture_output=True, text=True)  # noqa: S602,S603
+    # Fixed: shell=False prevents shell injection attacks by avoiding shell interpretation
+    # Split the command into args properly using shlex
+    args = shlex.split(cmd)
+    completed = subprocess.run(args, shell=False, capture_output=True, text=True)
     return {"returncode": str(completed.returncode), "stdout": completed.stdout, "stderr": completed.stderr}
 
 

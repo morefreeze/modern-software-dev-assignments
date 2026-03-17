@@ -11,7 +11,19 @@ async function loadNotes(params = {}) {
   const notes = await fetchJSON('/notes/?' + query.toString());
   for (const n of notes) {
     const li = document.createElement('li');
-    li.innerHTML = `<strong>${n.title}</strong>: ${n.content}`;
+
+    // Fixed: Use textContent instead of innerHTML to prevent XSS
+    // User-generated content (title and content) never goes through innerHTML
+    const strong = document.createElement('strong');
+    strong.textContent = n.title;
+    li.appendChild(strong);
+
+    const colon = document.createTextNode(': ');
+    li.appendChild(colon);
+
+    const contentNode = document.createTextNode(n.content);
+    li.appendChild(contentNode);
+
     list.appendChild(li);
   }
 }
