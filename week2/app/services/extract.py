@@ -66,6 +66,45 @@ def extract_action_items(text: str) -> List[str]:
     return unique
 
 
+def extract_action_items_llm(text: str) -> List[str]:
+    """Extract action items using LLM via Ollama with structured output."""
+    if not text.strip():
+        return []
+    try:
+        response = chat(
+            model="llama3",
+            messages=[
+                {
+                    "role": "system",
+                    "content": """Extract action items from the text. Each action item should be on its own line. Do not include any other text. If there are no action items, return nothing. Example input: "Meeting notes: - [ ] Set up database - Implement API extract endpoint - Write tests" Example output: Set up database\nImplement API extract endpoint\nWrite tests"""
+                },
+                {
+                    "role": "user",
+                    "content": text
+                }
+            ]
+        )
+        content = response["message"]["content"]
+        # Split by lines and clean
+        items = []
+        seen = set()
+        for line in content.strip().splitlines():
+            stripped = line.strip()
+            if (stripped and
+                stripped.lower() not in seen and
+                len(stripped) > 3 and
+                not stripped.startswith("(") and
+                not stripped.startswith("please") and
+                "nothing to extract" not in stripped.lower() and
+                "no action items" not in stripped.lower()):
+                seen.add(stripped.lower())
+                items.append(stripped)
+        return items
+    except Exception as e:
+        print(f"Error extracting action items with LLM: {e}")
+        return []
+
+
 def _looks_imperative(sentence: str) -> bool:
     words = re.findall(r"[A-Za-z']+", sentence)
     if not words:
