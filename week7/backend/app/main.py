@@ -14,8 +14,11 @@ app = FastAPI(title="Modern Software Dev Starter (Week 6)", version="0.1.0")
 # Ensure data dir exists
 Path("data").mkdir(parents=True, exist_ok=True)
 
-# Mount static frontend
-app.mount("/static", StaticFiles(directory="frontend"), name="static")
+# Mount static frontend - use absolute path relative to this file
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+frontend_dir = BASE_DIR / "frontend"
+frontend_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
 
 
 # Compatibility with FastAPI lifespan events; keep on_event for simplicity here

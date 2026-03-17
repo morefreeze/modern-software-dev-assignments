@@ -24,20 +24,55 @@
     <div class="row">
       <label class="row"><input id="save_note" type="checkbox" checked /> Save as note</label>
       <button id="extract">Extract</button>
+      <button id="extract_llm">Extract LLM</button>
+      <button id="list_notes">List Notes</button>
     </div>
 
     <div class="items" id="items"></div>
+    <div class="items" id="notes_list"></div>
 
     <script>
       const $ = (sel) => document.querySelector(sel);
+      const $$ = (sel) => document.querySelectorAll(sel);
       const itemsEl = $('#items');
-      const btn = $('#extract');
-      btn.addEventListener('click', async () => {
+      const notesListEl = $('#notes_list');
+      const btnExtract = $('#extract');
+      const btnExtractLlm = $('#extract_llm');
+      const btnListNotes = $('#list_notes');
+
+      btnExtract.addEventListener('click', async () => {
+        await extractActionItems('/action-items/extract');
+      });
+
+      btnExtractLlm.addEventListener('click', async () => {
+        await extractActionItems('/action-items/extract-llm');
+      });
+
+      btnListNotes.addEventListener('click', async () => {
+        notesListEl.textContent = 'Loading notes...';
+        try {
+          const res = await fetch('/notes');
+          if (!res.ok) throw new Error('Failed to fetch notes');
+          const notes = await res.json();
+          if (notes.length === 0) {
+            notesListEl.innerHTML = '<p class="muted">No notes found.</p>';
+            return;
+          }
+          notesListEl.innerHTML = '<h3>Notes</h3>' + notes.map(note => (
+            `<div class="item"><strong>Note ${note.id}:</strong> <span>${note.content.substring(0, 100)}${note.content.length > 100 ? '...' : ''}</span></div>`
+          )).join('');
+        } catch (err) {
+          console.error(err);
+          notesListEl.textContent = 'Error loading notes';
+        }
+      });
+
+      async function extractActionItems(endpoint) {
         const text = $('#text').value;
         const save = $('#save_note').checked;
         itemsEl.textContent = 'Extracting...';
         try {
-          const res = await fetch('/action-items/extract', {
+          const res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text, save_note: save }),
@@ -65,8 +100,7 @@
           console.error(err);
           itemsEl.textContent = 'Error extracting items';
         }
-      });
-
+      }
     </script>
   </body>
   </html>
