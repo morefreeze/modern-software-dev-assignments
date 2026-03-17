@@ -10,7 +10,48 @@ async function loadNotes() {
   const notes = await fetchJSON('/notes/');
   for (const n of notes) {
     const li = document.createElement('li');
-    li.textContent = `${n.title}: ${n.content}`;
+    li.innerHTML = `<strong>${n.title}</strong>: ${n.content}`;
+
+    // Edit button
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Edit';
+    editBtn.style.marginLeft = '8px';
+    editBtn.onclick = async () => {
+      const newTitle = prompt('Enter new title:', n.title);
+      if (newTitle !== null) {
+        const newContent = prompt('Enter new content:', n.content);
+        if (newContent !== null) {
+          try {
+            await fetchJSON(`/notes/${n.id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ title: newTitle, content: newContent }),
+            });
+            loadNotes();
+          } catch (err) {
+            alert('Failed to edit note: ' + err.message);
+          }
+        }
+      }
+    };
+    li.appendChild(editBtn);
+
+    // Delete button
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.style.marginLeft = '4px';
+    deleteBtn.onclick = async () => {
+      if (confirm('Are you sure you want to delete this note?')) {
+        try {
+          await fetchJSON(`/notes/${n.id}`, { method: 'DELETE' });
+          loadNotes();
+        } catch (err) {
+          alert('Failed to delete note: ' + err.message);
+        }
+      }
+    };
+    li.appendChild(deleteBtn);
+
     list.appendChild(li);
   }
 }
