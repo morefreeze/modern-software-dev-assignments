@@ -35,7 +35,7 @@ def extract(payload: ExtractActionItemsRequest) -> ExtractActionItemsResponse:
 
 
 @router.post("/extract-llm", response_model=ExtractActionItemsResponse)
-def extract_llm(payload: ExtractActionItemsRequest) -> ExtractActionItemsResponse:
+def extract_llm(payload: ExtractActionItemsRequest):
     """Extract action items from text using LLM method."""
     if not payload.text.strip():
         raise HTTPException(status_code=400, detail="text is required")
@@ -46,10 +46,13 @@ def extract_llm(payload: ExtractActionItemsRequest) -> ExtractActionItemsRespons
 
     items = extract_action_items_llm(payload.text.strip())
     ids = db.insert_action_items(items, note_id=note_id)
-    return ExtractActionItemsResponse(
-        note_id=note_id,
-        items=[{"id": i, "text": t} for i, t in zip(ids, items)]
-    )
+    data = {
+        "note_id": note_id,
+        "items": [{"id": i, "text": t} for i, t in zip(ids, items)]
+    }
+    print("Data to validate:", data)
+    print("Type of first id:", type(data["items"][0]["id"]) if data["items"] else "No items")
+    return data
 
 
 @router.get("", response_model=List[ActionItem])
