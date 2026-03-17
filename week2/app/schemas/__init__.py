@@ -37,7 +37,13 @@ class ExtractActionItemsRequest(BaseModel):
     save_note: bool = Field(False, description="Whether to save the text as a note")
 
 
+class ActionItemCreate(BaseModel):
+    """Schema for representing an action item in extraction response."""
+    id: int
+    text: str
+
+
 class ExtractActionItemsResponse(BaseModel):
     """Schema for the response of action item extraction."""
     note_id: Optional[int]
-    items: list[dict[str, str]]
+    items: list[ActionItemCreate]
