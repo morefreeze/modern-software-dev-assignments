@@ -1,0 +1,21 @@
+{% extends "notes/base.html" %}
+
+{% block title %}{{ title }} - Django Notes{% endblock %}
+
+{% block header_actions %}
+    <a href="{% url 'index' %}" class="btn btn-secondary">Back</a>
+{% endblock %}
+
+{% block content %}
+    <div style="background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);">
+        <h2>{{ title }}</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">{{ title }}</button>
+                <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

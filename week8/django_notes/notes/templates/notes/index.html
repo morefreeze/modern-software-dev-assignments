@@ -1,0 +1,31 @@
+{% extends "notes/base.html" %}
+
+{% block title %}Notes List - Django Notes{% endblock %}
+
+{% block header_actions %}
+    <a href="{% url 'create' %}" class="btn btn-primary">Add Note</a>
+{% endblock %}
+
+{% block content %}
+    {% if notes %}
+        <div class="notes-grid">
+            {% for note in notes %}
+                <div class="note-card">
+                    <div class="note-header">
+                        <h3>{{ note.title }}</h3>
+                        <div class="note-actions">
+                            <a href="{% url 'edit' note.id %}" class="btn btn-sm btn-secondary">Edit</a>
+                            <a href="{% url 'delete' note.id %}" class="btn btn-sm btn-danger">Delete</a>
+                        </div>
+                    </div>
+                    <p class="note-content">{{ note.content|truncatechars:150 }}</p>
+                    <small class="note-date">{{ note.created_at|date:"Y-m-d H:i" }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No notes yet. Click "Add Note" to create your first note.</p>
+        </div>
+    {% endif %}
+{% endblock %}

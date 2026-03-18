@@ -52,3 +52,20 @@ Thumbs.db
 
 # Vercel
 .vercel/*
+
+# Node
+node_modules/
+npm-debug.log*
+.npm
+
+# Python virtual environments
+anaconda3/
+*.sh
+
+# Coverage
+.coverage
+htmlcov/
+
+# Build artifacts
+week8/bolt_notes/frontend/build/
+

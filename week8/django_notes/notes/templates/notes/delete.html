@@ -1,0 +1,21 @@
+{% extends "notes/base.html" %}
+
+{% block title %}Delete Note - Django Notes{% endblock %}
+
+{% block header_actions %}
+    <a href="{% url 'index' %}" class="btn btn-secondary">Back</a>
+{% endblock %}
+
+{% block content %}
+    <div class="delete-confirm">
+        <h2>Delete Note</h2>
+        <p>Are you sure you want to delete the note titled "{{ note.title }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="btn-group">
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
